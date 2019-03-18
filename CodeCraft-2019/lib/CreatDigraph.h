@@ -2,6 +2,7 @@
 #define CREATDIGRAPH_H_INCLUDED
 #include"Node.h"
 #include"cMap.h"
+#include<set>
 #include<vector>
 #include<algorithm>
 #include<fstream>
@@ -109,6 +110,9 @@ public:
     int getCrossSize() const;
     int getRoadSize() const;
 
+    //按车速分类
+    void classifySpeedCars();
+
     void printPaths();     //输出Floyd算法求出的恒权重路线图
     void printVecPaths();  //输出Floyd算法求出的根据车速的变权重路线图
 
@@ -124,6 +128,7 @@ private:
     std::vector<Car> VecCar;
     std::vector<Cross> VecCross;
     std::vector<Road> VecRoad;
+    std::vector<std::set<int>> VecSpeedCars;
 
 
 };

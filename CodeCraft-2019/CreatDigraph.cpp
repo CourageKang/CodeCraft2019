@@ -116,6 +116,46 @@ int CreatDigraph::getRoadSize() const
     return VecRoad.size();
 }
 
+void CreatDigraph::classifySpeedCars()
+{
+    VecSpeedCars.reserve(11);
+    for(int i = 0; i < 11; ++i)
+    {
+        std::set<int> temset;
+        VecSpeedCars.push_back(temset);
+    }
+    cout<<"*********************"<<endl;
+    for(int i_car = 0; i_car < VecCar.size(); ++i_car)
+    {
+        if(VecCar[i_car].m_speed<=10)
+        {
+            VecSpeedCars[VecCar[i_car].m_speed].insert(VecCar[i_car].m_id);
+        }
+        else
+        {
+            VecSpeedCars[10].insert(VecCar[i_car].m_id);
+        }
+    }
+    cout<<"*********************"<<endl;
+    int num = 0;
+    int timeSlice = 1;
+    for(int i_set = 10; i_set >= 0; --i_set)
+    {
+        std::set<int>::iterator iterset = VecSpeedCars[i_set].begin();
+        for(; iterset != VecSpeedCars[i_set].end(); ++iterset)
+        {
+            VecCar[*iterset-VecCar[0].m_id].m_planTime = max(timeSlice,VecCar[*iterset-VecCar[0].m_id].m_planTime);
+            ++num;
+            if(num == 13)
+            {
+                num = 0;
+                ++timeSlice;
+            }
+        }
+    }
+}
+
+
 //输出Floyd算法求出的恒权重路线图
 void CreatDigraph::printPaths()
 {
@@ -181,7 +221,7 @@ void CreatDigraph::printNumAnswer(string answerpath)
     std::ofstream outputanswer(answerpath,std::ifstream::out);
     for(int i_car = 0; i_car < VecCar.size(); ++i_car)
     {
-        outputanswer<<"("<<VecCar[i_car].m_id<<", "<<VecCar[i_car].m_planTime+i_car*1;
+        outputanswer<<"("<<VecCar[i_car].m_id<<", "<<VecCar[i_car].m_planTime/*+i_car/11*/;
         for(int j = 0; j < m_vecpaths[VecCar[i_car].m_speed-1][VecCar[i_car].m_from-1][VecCar[i_car].m_to-1].size()-1; ++j)
         {
             int num_a = m_vecpaths[VecCar[i_car].m_speed-1][VecCar[i_car].m_from-1][VecCar[i_car].m_to-1][j];

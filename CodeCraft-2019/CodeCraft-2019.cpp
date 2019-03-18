@@ -26,6 +26,12 @@ int main(int argc, char *argv[])
 	std::cout << "crossPath is " << crossPath << std::endl;
 	std::cout << "answerPath is " << answerPath << std::endl;
 
+//	string carPath = "../config/car.txt";
+//	string roadPath = "../config/road.txt";
+//	string crossPath = "../config/cross.txt";
+//	string answerPath = "../config/answer.txt";
+
+
     CreatDigraph mycreatdigraph;
     //mycreatdigraph.test();
 
@@ -79,6 +85,7 @@ int main(int argc, char *argv[])
     Floyd myfloyd;
     myfloyd.test(mycreatdigraph);
     myfloyd.getNumPath(mycreatdigraph);
+    mycreatdigraph.classifySpeedCars();
 
     cout<<"-----------------------------------------"<<endl;
     //mycreatdigraph.printPaths();
