@@ -9,22 +9,22 @@
 
 int main(int argc, char *argv[])
 {
-    std::cout << "Begin" << std::endl;
+  std::cout << "Begin" << std::endl;
 
-	if(argc < 5){
-		std::cout << "please input args: carPath, roadPath, crossPath, answerPath" << std::endl;
-		exit(1);
-	}
+    if(argc < 5){
+        std::cout << "please input args: carPath, roadPath, crossPath, answerPath" << std::endl;
+        exit(1);
+    }
 
-	std::string carPath(argv[1]);
-	std::string roadPath(argv[2]);
-	std::string crossPath(argv[3]);
-	std::string answerPath(argv[4]);
+    std::string carPath(argv[1]);
+    std::string roadPath(argv[2]);
+    std::string crossPath(argv[3]);
+    std::string answerPath(argv[4]);
 
-	std::cout << "carPath is " << carPath << std::endl;
-	std::cout << "roadPath is " << roadPath << std::endl;
-	std::cout << "crossPath is " << crossPath << std::endl;
-	std::cout << "answerPath is " << answerPath << std::endl;
+    std::cout << "carPath is " << carPath << std::endl;
+    std::cout << "roadPath is " << roadPath << std::endl;
+    std::cout << "crossPath is " << crossPath << std::endl;
+    std::cout << "answerPath is " << answerPath << std::endl;
 
 //	string carPath = "../config/car.txt";
 //	string roadPath = "../config/road.txt";
@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
         mycreatdigraph.addCar(a,b,c,d,e);
         cout<<strCar<<endl;
     }
+
     //get VecCross
     string strCross;
     std::ifstream inputCross;
@@ -65,6 +66,7 @@ int main(int argc, char *argv[])
         mycreatdigraph.addCross(a,b,c,d,e);
         cout<<strCross<<endl;
     }
+
     //get VecRoad
     string strRoad;
     std::ifstream inputRoad;
@@ -81,26 +83,47 @@ int main(int argc, char *argv[])
         cout<<strRoad<<endl;
     }
 
-    //chuli
+    //get the route corresponding to the speed
+    cout<<"----get the route corresponding to the speed:begin----"<<endl;
     Floyd myfloyd;
-    myfloyd.test(mycreatdigraph);
+    //myfloyd.test(mycreatdigraph);
     myfloyd.getNumPath(mycreatdigraph);
-    mycreatdigraph.classifySpeedCars();
+    cout<<"----get the route corresponding to the speed:end----"<<endl;
 
-    cout<<"-----------------------------------------"<<endl;
+    //extract the speed and time slice of the vehicle set
+    cout<<"----extract the speed and time slice of the vehicle set:begin----"<<endl;
+    mycreatdigraph.classifySpeedCars();
+    cout<<"----extract the speed and time slice of the vehicle set:end----"<<endl;
+
+    //output answerPath
+    cout<<"----output answerPath:begin----"<<endl;
     //mycreatdigraph.printPaths();
     mycreatdigraph.printNumAnswer(answerPath);
+    cout<<"----output answerPath:end----"<<endl;
+
+//    //优化重复
+//    cout<<"----optimize path:begin----"<<endl;
+//    mycreatdigraph.optiPath();
+//    cout<<"----optimize path:end----"<<endl;
+
+//    //output optimization answerPath
+//    cout<<"----output optimization answerPath:begin----"<<endl;
+//    mycreatdigraph.printOptiNumAnswer(answerPath);
+//    cout<<"----output optimization answerPath:end----"<<endl;
+
+    //验证路径
+    cout<<"----check path:begin----"<<endl;
     AnswerCheck myanswercheck;
     bool IsRight = myanswercheck.checkLink(mycreatdigraph,answerPath);
     if(!IsRight)
     {
-        cout<<"----------------Error result------------------"<<endl;
+        cout<<"----Error Result----"<<endl;
     }
     else
     {
-        cout<<"----------------Right result------------------"<<endl;
+        cout<<"----Right Result----"<<endl;
     }
-    cout<<"-----------------------------------------"<<endl;
+    cout<<"----check path:end----"<<endl;
 
     system("pause");
 	return 0;

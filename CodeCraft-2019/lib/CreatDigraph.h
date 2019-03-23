@@ -6,6 +6,86 @@
 #include<vector>
 #include<algorithm>
 #include<fstream>
+
+struct RoadState
+{
+    vector<int> m_waitCars;
+    vector<int> m_stopCars;
+    vector<vector<int>> pathMatrix;
+};
+
+struct Road
+{
+    Road(){
+        m_id = 0;
+        m_length  = 0;
+        m_speed = 0;
+        m_channel = 0;
+        m_from = 0;
+        m_to = 0;
+        m_isDuplex = false;
+    }
+    Road(int a, int b, int c, int d, int e, int f, int g){
+        m_id = a;
+        m_length  = b;
+        m_speed = c;
+        m_channel = d;
+        m_from = e;
+        m_to = f;
+        m_isDuplex = bool(g);
+        for(int i = 0; i < b; ++i)
+        {
+            vector<int> temM;
+            for(int j = 0; j < d; ++j)
+            {
+                temM.push_back(0);
+            }
+            m_roadstate.pathMatrix.push_back(temM);
+        }
+    }
+    int m_id;
+    int m_length;
+    int m_speed;
+    int m_channel;
+    int m_from;
+    int m_to;
+    bool m_isDuplex;
+    RoadState m_roadstate;
+};
+
+struct CarState
+{
+    CarState()
+    {
+        Isspeed = 0;
+        IsFrom = 0;
+        IsTo = 0;
+        distance = 0;
+        roadTab = 0;
+        Isstart = false;
+        Isend = false;
+    }
+    CarState(Road myroad, int isspeed, int isfrom, int isto, int dis, int roadtab, bool isstart, bool isend)
+    {
+        IsRoad = myroad;
+        Isspeed = isspeed;
+        IsFrom = isfrom;
+        IsTo = isto;
+        distance = dis;
+        roadTab = roadtab;
+        Isstart = isstart;
+        Isend = isend;
+    }
+    Road IsRoad;
+    int Isspeed;
+    int IsFrom;
+    int IsTo;
+    int distance;
+    int roadTab;
+    bool Isstart;
+    bool Isend;
+};
+
 struct Car
 {
     Car(){
@@ -27,7 +107,8 @@ struct Car
     int m_to;
     int m_speed;
     int m_planTime;
-
+    vector<int> VecRoadID;
+    CarState m_carstate;
 };
 
 struct Cross
@@ -56,35 +137,6 @@ struct Cross
 
 };
 
-struct Road
-{
-    Road(){
-        m_id = 0;
-        m_length  = 0;
-        m_speed = 0;
-        m_channel = 0;
-        m_from = 0;
-        m_to = 0;
-        m_isDuplex = false;
-    }
-    Road(int a, int b, int c, int d, int e, int f, int g){
-        m_id = a;
-        m_length  = b;
-        m_speed = c;
-        m_channel = d;
-        m_from = e;
-        m_to = f;
-        m_isDuplex = bool(g);
-    }
-    int m_id;
-    int m_length;
-    int m_speed;
-    int m_channel;
-    int m_from;
-    int m_to;
-    bool m_isDuplex;
-
-};
 
 class CreatDigraph
 {
@@ -118,6 +170,16 @@ public:
 
     void printVecAnswer(); //输出根据固定车速变化的变权重路线图，路线为路口点
     void printNumAnswer(string answerpath); //输出根据固定车速变化的变权重路线图，路线为道路图
+    void printOptiNumAnswer(string answerpath); //输出根据固定车速变化的变权重路线图，路线为道路图
+
+    //转换交点和道路
+    vector<int> crosstoroad(int speed, int firstcross, int endcross);
+
+    //降低复杂度
+    void optiPath();
+
+    //路径仿真优化
+    void pathSimuOpti();
 
 public:
     typedef std::vector<std::vector<std::vector<int>>> VecPath;
@@ -128,9 +190,9 @@ private:
     std::vector<Car> VecCar;
     std::vector<Cross> VecCross;
     std::vector<Road> VecRoad;
-    std::vector<std::set<int>> VecSpeedCars;
 
-
+    std::vector<std::set<int>> VecTimeCars;   //each timeslice cars
+    std::vector<std::set<int>> VecSpeedCars;  //each speedslice cars
 };
 
 #endif // CREATDIGRAPH_H_INCLUDED

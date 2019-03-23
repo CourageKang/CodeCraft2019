@@ -155,7 +155,6 @@ void Floyd::ReadDate(const CreatDigraph &mycreatdigraph, int myspeed)
 	}
 }
 
-
 void Floyd::runFloyd()
 {
 
