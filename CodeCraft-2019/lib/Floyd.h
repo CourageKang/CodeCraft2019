@@ -6,14 +6,6 @@
 #include <vector>
 #include <algorithm>
 #include "CreatDigraph.h"
-const int INF=0x3f3f3f3f;
-const int MAX_VALUE=100000;
-
-struct MGraph
-{
-	double *edges[MAX_VALUE];
-	int iVertexCount, iEdageCount;
-};
 
 class Floyd{
 public:
@@ -26,6 +18,7 @@ public:
     void ReadDate(const CreatDigraph &mycreatdigraph, Car mycar);
     //运行Floyd算法
     void runFloyd();
+
     //输出路口路线图
     void PrintResult(CreatDigraph &mycreatdigraph);
     //控制台测试流程

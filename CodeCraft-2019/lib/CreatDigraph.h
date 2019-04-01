@@ -1,11 +1,23 @@
 #ifndef CREATDIGRAPH_H_INCLUDED
 #define CREATDIGRAPH_H_INCLUDED
-#include"Node.h"
-#include"cMap.h"
 #include<set>
 #include<vector>
 #include<algorithm>
 #include<fstream>
+#include<iostream>
+#include<map>
+
+using namespace std;
+
+
+const int INF=0x3f3f3f3f;
+const int MAX_VALUE=300;
+
+struct MGraph
+{
+    double *edges[MAX_VALUE];
+    int iVertexCount, iEdageCount;
+};
 
 struct RoadState
 {
@@ -18,6 +30,7 @@ struct Road
 {
     Road(){
         m_id = 0;
+        m_idr = 0;
         m_length  = 0;
         m_speed = 0;
         m_channel = 0;
@@ -25,18 +38,19 @@ struct Road
         m_to = 0;
         m_isDuplex = false;
     }
-    Road(int a, int b, int c, int d, int e, int f, int g){
+    Road(int a, int b, int c, int d, int e, int f, int g, int h){
         m_id = a;
-        m_length  = b;
-        m_speed = c;
-        m_channel = d;
-        m_from = e;
-        m_to = f;
-        m_isDuplex = bool(g);
-        for(int i = 0; i < b; ++i)
+        m_idr = b;
+        m_length  = c;
+        m_speed = d;
+        m_channel = e;
+        m_from = f;
+        m_to = g;
+        m_isDuplex = bool(h);
+        for(int i = 0; i < c; ++i)
         {
             vector<int> temM;
-            for(int j = 0; j < d; ++j)
+            for(int j = 0; j < c; ++j)
             {
                 temM.push_back(0);
             }
@@ -44,6 +58,7 @@ struct Road
         }
     }
     int m_id;
+    int m_idr;
     int m_length;
     int m_speed;
     int m_channel;
@@ -90,19 +105,22 @@ struct Car
 {
     Car(){
         m_id = 0;
+        m_idr = 0;
         m_from = 0;
         m_to = 0;
         m_speed = 0;
         m_planTime = 0;
     }
-    Car(int a, int b, int c, int d, int e){
+    Car(int a, int b, int c, int d, int e, int f){
         m_id = a;
-        m_from = b;
-        m_to = c;
-        m_speed = d;
-        m_planTime = e;
+        m_idr = b;
+        m_from = c;
+        m_to = d;
+        m_speed = e;
+        m_planTime = f;
     }
     int m_id;
+    int m_idr;
     int m_from;
     int m_to;
     int m_speed;
@@ -115,21 +133,24 @@ struct Cross
 {
     Cross(){
         m_id = 0;
+        m_idr = 0;
         m_roadID1 = 0;
         m_roadID2 = 0;
         m_roadID3 = 0;
         m_roadID4 = 0;
 
     }
-    Cross(int a, int b, int c, int d, int e){
+    Cross(int a, int b, int c, int d, int e, int f){
         m_id = a;
-        m_roadID1 = b;
-        m_roadID2 = c;
-        m_roadID3 = d;
-        m_roadID4 = e;
+        m_idr = b;
+        m_roadID1 = c;
+        m_roadID2 = d;
+        m_roadID3 = e;
+        m_roadID4 = f;
 
     }
     int m_id;
+    int m_idr;
     int m_roadID1;
     int m_roadID2;
     int m_roadID3;
@@ -144,13 +165,10 @@ public:
     CreatDigraph();
     ~CreatDigraph();
 
-    //测试创建有向图，深度遍历和广度遍历
-    void test();
-
     //从外界添加汽车，路口，跑道信息
-    void addCar(int a, int b, int c, int d, int e);
-    void addCross(int a, int b, int c, int d, int e);
-    void addRoad(int a, int b, int c, int d, int e, int f, int g);
+    void addCar(int a, int b, int c, int d, int e, int f);
+    void addCross(int a, int b, int c, int d, int e, int f);
+    void addRoad(int a, int b, int c, int d, int e, int f, int g, int h);
 
     //从外界获取汽车，路口，跑道信息
     Car getCar(int i_car) const;
@@ -162,6 +180,8 @@ public:
     int getCrossSize() const;
     int getRoadSize() const;
 
+    void ReadDate(int myspeed);
+
     //按车速分类
     void classifySpeedCars();
 
@@ -172,11 +192,18 @@ public:
     void printNumAnswer(string answerpath); //输出根据固定车速变化的变权重路线图，路线为道路图
     void printOptiNumAnswer(string answerpath); //输出根据固定车速变化的变权重路线图，路线为道路图
 
+    void printOptiDisorderNumAnswer(string answerpath); //输出根据固定车速变化的变权重路线图，路线为道路图
+
     //转换交点和道路
     vector<int> crosstoroad(int speed, int firstcross, int endcross);
+    vector<int> crosstoroadDijkstra(int roadid1, int roadid2, int speed, int firstcross, int endcross);
+
+    //Dijkstra
+    void runDijkstra(int roadid1, int roadid2,  int firstPnt, int endPnt, int myspeed, vector<int>& vecpathPnts);
 
     //降低复杂度
     void optiPath();
+    void optiTimePath();
 
     //路径仿真优化
     void pathSimuOpti();
@@ -186,7 +213,15 @@ public:
     std::vector<std::vector<std::vector<int>>> m_paths;
     std::vector<VecPath> m_vecpaths;
 
+    map<int,int> MapCar1;
+    map<int,int> MapCross1;
+    map<int,int> MapRoad1;
+    map<int,int> MapCar2;
+    map<int,int> MapCross2;
+    map<int,int> MapRoad2;
+
 private:
+    MGraph mGraph;
     std::vector<Car> VecCar;
     std::vector<Cross> VecCross;
     std::vector<Road> VecRoad;

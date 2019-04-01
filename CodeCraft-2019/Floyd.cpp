@@ -177,6 +177,7 @@ void Floyd::runFloyd()
 
 }
 
+
 void Floyd::PrintResult(CreatDigraph &mycreatdigraph)
 {
 
@@ -265,7 +266,7 @@ void Floyd::getVecPath(CreatDigraph &mycreatdigraph)
 
 void Floyd::getNumPath(CreatDigraph &mycreatdigraph)
 {
-    for(int i_myspeed = 1; i_myspeed <= 10; ++i_myspeed)
+    for(int i_myspeed = 1; i_myspeed <= 20; ++i_myspeed)
     {
         getPath(mycreatdigraph,i_myspeed);
     }
