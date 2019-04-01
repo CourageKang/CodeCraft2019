@@ -1,1 +1,0 @@
-/usr/bin/c++   -O3 -Wall -std=c++11  -rdynamic CMakeFiles/CodeCraft-2019.dir/AnswerCheck.cpp.o CMakeFiles/CodeCraft-2019.dir/CodeCraft-2019.cpp.o CMakeFiles/CodeCraft-2019.dir/CreatDigraph.cpp.o CMakeFiles/CodeCraft-2019.dir/Floyd.cpp.o  -o /home/lalala/Documents/test/SDK/SDK_C++/bin/CodeCraft-2019 
